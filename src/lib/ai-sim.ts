@@ -361,6 +361,7 @@ export function planTasks(i: PlannerInput): { doc: GeneratedDoc; tasks: PlannedT
     });
   });
 
+  const top = tasks[0];
   const doc: GeneratedDoc = {
     title: `${i.horizon} plan`,
     meta: [
@@ -373,8 +374,8 @@ export function planTasks(i: PlannerInput): { doc: GeneratedDoc; tasks: PlannedT
       {
         label: "Focus recommendation",
         tone: "ember",
-        body: tasks.length
-          ? `Protect ${tasks[0].slot}–${tasks[0].minutes}min for "${tasks[0].title}". It carries the highest impact-to-effort ratio (${tasks[0].score}), and everything below it gets easier once it's done.`
+        body: top
+          ? `Protect ${top.slot}–${top.minutes}min for "${top.title}". It carries the highest impact-to-effort ratio (${top.score}), and everything below it gets easier once it's done.`
           : "Add a few tasks to generate a plan.",
       },
       {

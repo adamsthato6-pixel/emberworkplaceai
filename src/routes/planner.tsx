@@ -179,7 +179,7 @@ function PlannerPage() {
                 min={1}
                 max={10}
                 step={0.5}
-                onValueChange={([v]) => set("capacityHours", v)}
+                onValueChange={([v]) => set("capacityHours", v ?? input.capacityHours)}
                 className="mt-3"
               />
             </Field>
