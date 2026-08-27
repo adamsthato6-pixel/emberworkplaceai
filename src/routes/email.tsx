@@ -43,8 +43,15 @@ export const Route = createFileRoute("/email")({
   component: EmailPage,
 });
 
-const TONES = ["Warm", "Direct", "Formal", "Persuasive", "Apologetic"] as const;
-const AUDIENCES = ["Executive", "Client", "Teammate", "Candidate", "Vendor"] as const;
+const TONES = ["Formal", "Informal", "Persuasive", "Warm", "Direct", "Apologetic"] as const;
+const AUDIENCES = [
+  "Manager",
+  "Client",
+  "Teammate",
+  "Executive",
+  "Candidate",
+  "Vendor",
+] as const;
 const LENGTHS = ["Short", "Standard", "Detailed"] as const;
 
 const PRESETS = [
