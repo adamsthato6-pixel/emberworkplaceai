@@ -98,8 +98,15 @@ function futureDate(daysFromNow: number) {
 
 /* ---------------------------------- Email --------------------------------- */
 
-export type EmailTone = "Warm" | "Direct" | "Formal" | "Persuasive" | "Apologetic";
+export type EmailTone =
+  | "Warm"
+  | "Direct"
+  | "Formal"
+  | "Informal"
+  | "Persuasive"
+  | "Apologetic";
 export type EmailAudience =
+  | "Manager"
   | "Executive"
   | "Client"
   | "Teammate"
