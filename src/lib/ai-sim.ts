@@ -127,11 +127,13 @@ const toneOpeners: Record<EmailTone, string> = {
   Warm: "Hope your week is going well —",
   Direct: "Quick note:",
   Formal: "I hope this message finds you well.",
+  Informal: "Quick one for you —",
   Persuasive: "There's a clear win available here, and I'd like your take.",
   Apologetic: "Thank you for your patience on this —",
 };
 
 const audienceFraming: Record<EmailAudience, string> = {
+  Manager: "Status first, then the decision or support you need from them.",
   Executive: "Leading with outcome and decision needed, detail kept to a minimum.",
   Client: "Framed around value delivered and next steps you can count on.",
   Teammate: "Collaborative framing with shared ownership of the next step.",
