@@ -48,6 +48,7 @@ function ResearchPage() {
     question: "",
     depth: "Standard",
     lens: "Market",
+    source: "",
   });
   const [loading, setLoading] = useState(false);
   const [doc, setDoc] = useState<GeneratedDoc | null>(null);
