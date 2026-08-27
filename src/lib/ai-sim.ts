@@ -412,6 +412,8 @@ export type ResearchInput = {
   question: string;
   depth: "Brief" | "Standard" | "Deep dive";
   lens: "Market" | "Technical" | "Competitive" | "Operational";
+  /** Optional article, report or topic text to summarise alongside the question. */
+  source: string;
 };
 
 export function researchPrompt(i: ResearchInput) {
@@ -419,15 +421,20 @@ export function researchPrompt(i: ResearchInput) {
     "SYSTEM: You are a research analyst who separates evidence from inference.",
     `QUESTION: ${clean(i.question) || "<question>"}`,
     `LENS: ${i.lens}. DEPTH: ${i.depth}.`,
+    i.source.trim()
+      ? "SOURCE: summarise the supplied article/report text; quote nothing longer than one sentence and never add facts it does not contain."
+      : "SOURCE: none supplied — reason from stated assumptions only.",
     "CONSTRAINTS: label every claim as observed or inferred; no fabricated citations; flag what would change the conclusion.",
-    "OUTPUT CONTRACT: thesis, key insights, evidence needed, counter-view, recommended next actions.",
+    "OUTPUT CONTRACT: thesis, source summary (if supplied), key insights, plain-English explanation, evidence needed, counter-view, recommendations.",
   ].join("\n");
 }
 
 export function research(i: ResearchInput): GeneratedDoc {
   const q = clean(i.question) || "the topic";
-  const kw = keywords(q, 5);
+  const kw = keywords(`${i.question} ${i.source}`, 5);
   const depthN = i.depth === "Brief" ? 3 : i.depth === "Standard" ? 4 : 6;
+  const src = clean(i.source);
+  const srcSentences = src ? sentences(src) : [];
 
   const insightSeeds = [
     `The constraint is rarely ${kw[0] ?? "the technology"} — it's the decision latency around it.`,
@@ -438,9 +445,33 @@ export function research(i: ResearchInput): GeneratedDoc {
     `A 90-day pilot with two teams produces more signal than a six-month analysis.`,
   ];
 
+  const sourceSections: DocSection[] = srcSentences.length
+    ? [
+        {
+          label: "Source summary",
+          tone: "sage",
+          bullets: srcSentences
+            .slice(0, depthN)
+            .map((s) => (s.length > 180 ? s.slice(0, 177) + "…" : s)),
+        },
+        {
+          label: "In plain English",
+          body: `Stripped of jargon: the material is about ${
+            kw.slice(0, 3).join(", ") || "the topic"
+          }. It matters because it changes what you do next week, not what you believe in general — and the one line worth repeating in a meeting is that ${
+            (srcSentences[0] ?? "").replace(/\.$/, "") || "the direction is set, the sequencing is not"
+          }.`,
+        },
+      ]
+    : [];
+
   return {
     title: `Research brief — ${q.length > 60 ? q.slice(0, 57) + "…" : q}`,
-    meta: [i.lens + " lens", i.depth, `${depthN} insights`],
+    meta: [
+      i.lens + " lens",
+      i.depth,
+      srcSentences.length ? `${srcSentences.length} source statements` : "No source supplied",
+    ],
     prompt: researchPrompt(i),
     sections: [
       {
@@ -448,6 +479,7 @@ export function research(i: ResearchInput): GeneratedDoc {
         tone: "ember",
         body: `Through a ${i.lens.toLowerCase()} lens, ${q.replace(/\?$/, "")} resolves less into a single answer and more into a sequencing problem: decide what must be true first, then buy evidence for that one thing.`,
       },
+      ...sourceSections,
       { label: "Key insights", bullets: insightSeeds.slice(0, depthN) },
       {
         label: "Evidence to gather",
@@ -466,7 +498,7 @@ export function research(i: ResearchInput): GeneratedDoc {
         } would add coordination cost without changing the bottleneck.`,
       },
       {
-        label: "Next actions",
+        label: "Recommendations",
         bullets: [
           `Write the one-page decision memo before gathering more data.`,
           `Instrument the baseline metric this week.`,
