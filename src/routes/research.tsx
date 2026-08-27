@@ -48,6 +48,7 @@ function ResearchPage() {
     question: "",
     depth: "Standard",
     lens: "Market",
+    source: "",
   });
   const [loading, setLoading] = useState(false);
   const [doc, setDoc] = useState<GeneratedDoc | null>(null);
@@ -87,6 +88,20 @@ function ResearchPage() {
               presets={PRESETS.map((p) => ({ label: p }))}
               onPick={(label) => set("question", label)}
             />
+
+            <Field
+              label="Paste an article, report or notes to summarise"
+              hint="Optional · editable"
+            >
+              <Textarea
+                value={input.source}
+                onChange={(e) => set("source", e.target.value)}
+                rows={6}
+                placeholder="Paste the source text here and Ember will summarise it, pull the key insights and restate it in plain English."
+                className="resize-y bg-background/60"
+              />
+            </Field>
+
 
             <Field label="Lens">
               <ChipGroup
