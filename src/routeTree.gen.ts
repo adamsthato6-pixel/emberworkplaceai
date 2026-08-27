@@ -15,6 +15,7 @@ import { Route as EmailRouteImport } from './routes/email'
 import { Route as NotesRouteImport } from './routes/notes'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as ResearchRouteImport } from './routes/research'
+import { Route as ResponsibleRouteImport } from './routes/responsible'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const ResearchRoute = ResearchRouteImport.update({
   path: '/research',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResponsibleRoute = ResponsibleRouteImport.update({
+  id: '/responsible',
+  path: '/responsible',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/notes': typeof NotesRoute
   '/planner': typeof PlannerRoute
   '/research': typeof ResearchRoute
+  '/responsible': typeof ResponsibleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/notes': typeof NotesRoute
   '/planner': typeof PlannerRoute
   '/research': typeof ResearchRoute
+  '/responsible': typeof ResponsibleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,14 +79,36 @@ export interface FileRoutesById {
   '/notes': typeof NotesRoute
   '/planner': typeof PlannerRoute
   '/research': typeof ResearchRoute
+  '/responsible': typeof ResponsibleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chat' | '/email' | '/notes' | '/planner' | '/research'
+  fullPaths:
+    | '/'
+    | '/chat'
+    | '/email'
+    | '/notes'
+    | '/planner'
+    | '/research'
+    | '/responsible'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chat' | '/email' | '/notes' | '/planner' | '/research'
+  to:
+    | '/'
+    | '/chat'
+    | '/email'
+    | '/notes'
+    | '/planner'
+    | '/research'
+    | '/responsible'
   id:
-    '__root__' | '/' | '/chat' | '/email' | '/notes' | '/planner' | '/research'
+    | '__root__'
+    | '/'
+    | '/chat'
+    | '/email'
+    | '/notes'
+    | '/planner'
+    | '/research'
+    | '/responsible'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -88,6 +118,7 @@ export interface RootRouteChildren {
   NotesRoute: typeof NotesRoute
   PlannerRoute: typeof PlannerRoute
   ResearchRoute: typeof ResearchRoute
+  ResponsibleRoute: typeof ResponsibleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -134,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/responsible': {
+      id: '/responsible'
+      path: '/responsible'
+      fullPath: '/responsible'
+      preLoaderRoute: typeof ResponsibleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -144,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotesRoute: NotesRoute,
   PlannerRoute: PlannerRoute,
   ResearchRoute: ResearchRoute,
+  ResponsibleRoute: ResponsibleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
